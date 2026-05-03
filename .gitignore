@@ -1,3 +1,4 @@
 *.npy
-*.pkl
 __pycache__/
+src/*.pkl
+# app/*.pkl are included intentionally for deployment
