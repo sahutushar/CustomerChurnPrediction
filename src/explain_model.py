@@ -39,14 +39,14 @@ plt.figure(figsize=(10, 6))
 shap.summary_plot(shap_values, X_test_df, max_display=10, show=False)
 plt.tight_layout()
 plt.savefig(os.path.join(script_dir, 'shap_summary.png'), dpi=150)
-print("✅ Saved: shap_summary.png")
+print("Saved: shap_summary.png")
 
 # Feature importance bar chart
 plt.figure(figsize=(10, 6))
 shap.summary_plot(shap_values, X_test_df, plot_type="bar", max_display=10, show=False)
 plt.tight_layout()
 plt.savefig(os.path.join(script_dir, 'shap_importance.png'), dpi=150)
-print("✅ Saved: shap_importance.png")
+print("Saved: shap_importance.png")
 
 print("\nTop 10 most important features for churn prediction:")
 feature_importance = np.abs(shap_values).mean(axis=0)

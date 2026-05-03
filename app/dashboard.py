@@ -33,7 +33,7 @@ warnings.filterwarnings("ignore")
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Churn Predictor · Vaibhav Kose",
+    page_title="Churn Predictor · Tushar Sahu",
     page_icon="🔄",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -165,7 +165,7 @@ df = rebuild_df()
 # ── Sidebar nav ───────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## 🔄 Churn Predictor")
-    st.markdown("**Vaibhav Kose** · Portfolio Project")
+    st.markdown("**Tushar Sahu** · Portfolio Project")
     st.markdown("<hr class='section-rule'>", unsafe_allow_html=True)
     page = st.radio("Navigate", ["🏠 Home", "🔍 Predict", "📊 EDA Explorer", "📖 Model Report"])
     st.markdown("<hr class='section-rule'>", unsafe_allow_html=True)

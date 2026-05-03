@@ -40,7 +40,7 @@ COLUMNS_PATH   = os.path.join(BASE_DIR, "feature_columns.pkl")
 CUSTOMERS = [
     {
         "_id": "CUST-7841",
-        "_label": "Month-to-Month, Fiber, Short Tenure → HIGH RISK",
+        "_label": "Month-to-Month, Fiber, Short Tenure -> HIGH RISK",
         "gender": "Male",
         "SeniorCitizen": 1,
         "Partner": "No",
@@ -59,7 +59,7 @@ CUSTOMERS = [
     },
     {
         "_id": "CUST-3302",
-        "_label": "One-Year Contract, Moderate Tenure → MEDIUM RISK",
+        "_label": "One-Year Contract, Moderate Tenure -> MEDIUM RISK",
         "gender": "Female",
         "SeniorCitizen": 0,
         "Partner": "Yes",
@@ -78,7 +78,7 @@ CUSTOMERS = [
     },
     {
         "_id": "CUST-1129",
-        "_label": "Two-Year Contract, Long Tenure, Full Support → LOW RISK",
+        "_label": "Two-Year Contract, Long Tenure, Full Support -> LOW RISK",
         "gender": "Female",
         "SeniorCitizen": 0,
         "Partner": "Yes",
@@ -107,11 +107,11 @@ def classify_risk(prob: float) -> tuple[str, str]:
       > 50%  → HIGH   (immediate retention campaign)
     """
     if prob > 0.50:
-        return "HIGH",   "🚨  HIGH RISK: Triggering retention campaign immediately!"
+        return "HIGH",   "HIGH RISK: Triggering retention campaign immediately!"
     elif prob > 0.30:
-        return "MEDIUM", "⚠️   MEDIUM RISK: Schedule proactive outreach within 7 days."
+        return "MEDIUM", "MEDIUM RISK: Schedule proactive outreach within 7 days."
     else:
-        return "LOW",    "✅  LOW RISK: Customer stable — no immediate action required."
+        return "LOW",    "LOW RISK: Customer stable - no immediate action required."
 
 
 # ── Single-Customer Scorer ────────────────────────────────────────────────────
@@ -125,6 +125,14 @@ def score_customer(payload: dict,
     """
     # Strip internal metadata keys
     features = {k: v for k, v in payload.items() if not k.startswith("_")}
+
+    # Engineer interaction features (must match preprocess.py)
+    is_mtm  = 1.0 if features["Contract"] == "Month-to-month" else 0.0
+    has_sec = 1.0 if features["OnlineSecurity"] == "Yes" else 0.0
+    features["MonthlyCharges_x_MTM"]  = features["MonthlyCharges"] * is_mtm
+    features["Tenure_x_Security"]     = features["tenure"] * has_sec
+    features["MTM_x_NoSecurity"]      = is_mtm * (1.0 - has_sec)
+    features["CostPerTenureMonth"]    = features["MonthlyCharges"] / (features["tenure"] + 1)
 
     # Build a single-row DataFrame — column order must match training
     df_input = pd.DataFrame([features])[feature_columns]
@@ -152,13 +160,13 @@ RESET = "\033[0m"
 
 def print_result(payload: dict, result: dict):
     color = RISK_COLORS.get(result["risk_tier"], "")
-    print(f"\n  {'─'*56}")
+    print(f"\n  {'-'*56}")
     print(f"  Customer ID  : {result['customer_id']}")
     print(f"  Profile      : {payload['_label']}")
-    print(f"  {'─'*56}")
+    print(f"  {'-'*56}")
     print(f"  Churn Prob   : {result['churn_probability']:.2%}")
     print(f"  Risk Tier    : {color}{result['risk_tier']}{RESET}")
-    print(f"  Churn Flag   : {'YES — will likely churn' if result['churn_flag'] else 'NO — likely to stay'}")
+    print(f"  Churn Flag   : {'YES - will likely churn' if result['churn_flag'] else 'NO - likely to stay'}")
     print(f"\n  {color}{result['business_action']}{RESET}")
 
 
@@ -181,9 +189,9 @@ def main():
     model           = joblib.load(MODEL_PATH)
     feature_columns = joblib.load(COLUMNS_PATH)
 
-    print(f"  ✔  Preprocessor loaded  →  {PIPELINE_PATH}")
-    print(f"  ✔  XGBoost model loaded →  {MODEL_PATH}")
-    print(f"  ✔  Feature schema       →  {len(feature_columns)} columns")
+    print(f"  OK Preprocessor loaded  ->  {PIPELINE_PATH}")
+    print(f"  OK XGBoost model loaded ->  {MODEL_PATH}")
+    print(f"  OK Feature schema       ->  {len(feature_columns)} columns")
 
     # -- Simulate receiving JSON payloads -------------------------------------
     print("\n[2/3] Simulating real-time scoring API requests...\n")
@@ -202,15 +210,14 @@ def main():
         result["latency_ms"] = round(latency_ms, 2)
         all_results.append(result)
         print_result(payload, result)
-        print(f"\n  ⏱  Scoring latency: {latency_ms:.2f} ms  "
-              f"(avg single-record inference)")
+        print(f"\n  Scoring latency: {latency_ms:.2f} ms (avg single-record inference)")
 
     # -- Summary --------------------------------------------------------------
     print("\n" + "=" * 60)
     print("  SCORING SUMMARY")
     print("=" * 60)
     print(f"\n  {'Customer':<12} {'Churn Prob':>12} {'Risk':>8} {'Flag':>6}")
-    print(f"  {'─'*46}")
+    print(f"  {'-'*46}")
     for r in all_results:
         color  = RISK_COLORS.get(r["risk_tier"], "")
         flag   = "CHURN" if r["churn_flag"] else "STAY"
@@ -219,11 +226,11 @@ def main():
 
     avg_lat = np.mean([r["latency_ms"] for r in all_results])
     print(f"\n  Average scoring latency: {avg_lat:.2f} ms per customer")
-    print("\n  ✔  Real-time scoring demonstration complete.\n")
+    print("\n  Real-time scoring demonstration complete.\n")
 
     # -- JSON output (mirrors what an API endpoint would return) --------------
     print("  Raw JSON response (as returned by a REST scoring endpoint):")
-    print("  " + "─" * 56)
+    print("  " + "-" * 56)
     clean = [{k: v for k, v in r.items() if k != "business_action"}
              for r in all_results]
     print("  " + json.dumps(clean, indent=4).replace("\n", "\n  "))

@@ -210,9 +210,9 @@ def main():
     joblib.dump(NUMERIC_FEATURES + CATEGORICAL_FEATURES,
                 os.path.join(OUTPUT_DIR, "feature_columns.pkl"))
 
-    print("      ✔  X_train.npy, X_test.npy, y_train.npy, y_test.npy")
-    print("      ✔  preprocessor_pipeline.pkl")
-    print("      ✔  feature_columns.pkl")
+    print("      OK X_train.npy, X_test.npy, y_train.npy, y_test.npy")
+    print("      OK preprocessor_pipeline.pkl")
+    print("      OK feature_columns.pkl")
     print("\n  Done. Run  train.py  next.\n")
 
 

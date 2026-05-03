@@ -120,7 +120,7 @@ def main():
     y_train = np.load(Y_TRAIN)
     y_test  = np.load(Y_TEST)
     print(f"  Train: {X_train.shape}   Test: {X_test.shape}")
-    print(f"  Churn rate  →  Train: {y_train.mean():.2%}  |  Test: {y_test.mean():.2%}")
+    print(f"  Churn rate  ->  Train: {y_train.mean():.2%}  |  Test: {y_test.mean():.2%}")
 
     # -- Train & evaluate all models ------------------------------------------
     banner("PHASE 1 — TRAINING ALL BENCHMARK MODELS")
@@ -129,7 +129,7 @@ def main():
     results = []
 
     for name, model in models.items():
-        print(f"\n  ▶ Training: {name} ...", end=" ", flush=True)
+        print(f"\n  >> Training: {name} ...", end=" ", flush=True)
         t0 = time.time()
         model.fit(X_train, y_train)
         elapsed = time.time() - t0
@@ -146,7 +146,7 @@ def main():
     print("-" * (col_w + 35))
 
     for r in results:
-        marker = "  ◀ SELECTED" if r["model"] == "XGBoost" else ""
+        marker = "  << SELECTED" if r["model"] == "XGBoost" else ""
         print(
             f"{r['model']:<{col_w}} "
             f"{r['accuracy']:>9.4f} "
@@ -168,13 +168,13 @@ def main():
     xgb_model   = xgb_metrics["_obj"]
 
     print(f"\n  Rationale for selecting XGBoost:")
-    print("    ✔  Gradient boosting handles mixed feature types naturally")
-    print("    ✔  Built-in regularisation (L1/L2) reduces overfitting")
-    print("    ✔  Highly tunable for business-critical precision/recall trade-offs")
-    print("    ✔  Native support for real-time single-row scoring (predict.py)")
+    print("    OK Gradient boosting handles mixed feature types naturally")
+    print("    OK Built-in regularisation (L1/L2) reduces overfitting")
+    print("    OK Highly tunable for business-critical precision/recall trade-offs")
+    print("    OK Native support for real-time single-row scoring (predict.py)")
     print(f"\n  Final XGBoost Metrics:")
     print(f"    Accuracy  : {xgb_metrics['accuracy']:.4f}  "
-          f"({'✔ TARGET MET' if xgb_metrics['accuracy'] >= 0.87 else '✘ BELOW 87%'})")
+          f"({'TARGET MET' if xgb_metrics['accuracy'] >= 0.87 else 'BELOW 87%'})")
     print(f"    F1-Score  : {xgb_metrics['f1_score']:.4f}")
     print(f"    AUC-ROC   : {xgb_metrics['auc_roc']:.4f}")
 
@@ -196,7 +196,7 @@ def main():
 
     joblib.dump(xgb_model, MODEL_OUT)
     size_kb = os.path.getsize(MODEL_OUT) / 1024
-    print(f"\n  ✔  Model saved  →  {MODEL_OUT}")
+    print(f"\n  OK Model saved -> {MODEL_OUT}")
     print(f"     File size    :  {size_kb:.1f} KB")
     print(f"     Serialiser   :  joblib (compatible with sklearn pipelines)")
     print("\n  Pipeline complete. Run predict.py for real-time scoring demo.\n")

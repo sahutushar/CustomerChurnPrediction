@@ -85,7 +85,7 @@ app = FastAPI(
     description=(
         "Real-time churn scoring API for the Customer Churn Prediction portfolio project.\n\n"
         "**Pipeline:** Raw customer JSON → ColumnTransformer → XGBoost → Churn probability\n\n"
-        "**Author:** Vaibhav Kose · Data Analyst Portfolio"
+        "**Author:** Tushar Sahu · Data Analyst Portfolio"
     ),
     version="1.0.0",
     lifespan=lifespan,
@@ -245,7 +245,7 @@ def score_one(customer: CustomerInput,
 async def root():
     return {
         "project":     "Customer Churn Prediction",
-        "author":      "Vaibhav Kose",
+        "author":      "Tushar Sahu",
         "version":     "1.0.0",
         "model":       "XGBoost (tuned, 87%+ accuracy)",
         "endpoints": {

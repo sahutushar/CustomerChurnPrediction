@@ -87,7 +87,7 @@ def save(fig, name: str):
     fig.savefig(path, dpi=150, bbox_inches="tight",
                 facecolor=PALETTE["background"])
     plt.close(fig)
-    print(f"  ✔  Saved → eda_plots/{name}")
+    print(f"  Saved -> eda_plots/{name}")
 
 def subtitle(ax, text: str):
     ax.set_title(text, fontsize=10, color=PALETTE["neutral"],
@@ -541,31 +541,14 @@ def main():
     print("\n" + "=" * 60)
     print("  ALL 9 PLOTS SAVED TO eda_plots/")
     print("=" * 60)
-    print("""
-  Interview talking points from these plots:
-  ─────────────────────────────────────────
-  01  "The dataset has a 12% churn rate — a class imbalance I
-       handled with stratified splits and monitoring F1/AUC."
-
-  02  "Month-to-month customers churn at 5× the rate of two-year
-       contract holders — contract type is the single strongest
-       business-level predictor."
-
-  06  "The correlation heatmap shows my engineered interaction
-       features (violet) correlate more strongly with churn than
-       raw features — validating the feature engineering step."
-
-  07  "MTM × No Security is the top XGBoost feature — customers
-       on a monthly plan with no security add-on are most at risk."
-
-  08  "XGBoost achieves the best AUC-ROC across all three models,
-       justifying its selection as the production classifier."
-
-  09  "The confusion matrix reveals a precision/recall trade-off
-       for the minority churn class — I can tune the threshold to
-       prioritise recall if the business cost of missing a churner
-       is higher than a false alarm."
-""")
+    print("\n  Interview talking points from these plots:")
+    print("  -----------------------------------------")
+    print("  01  Dataset has ~14% churn rate - handled with stratified splits and F1/AUC monitoring.")
+    print("  02  Month-to-month customers churn at 5x the rate of two-year contract holders.")
+    print("  06  Engineered features correlate more strongly with churn than raw features.")
+    print("  07  MTM x No Security is the top XGBoost feature - highest-risk customer profile.")
+    print("  08  XGBoost achieves the best AUC-ROC across all three models.")
+    print("  09  Confusion matrix shows precision/recall trade-off for the minority churn class.")
 
 
 if __name__ == "__main__":
